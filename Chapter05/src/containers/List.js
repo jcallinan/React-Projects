@@ -24,11 +24,11 @@ const List = ({ match, history }) => {
   );
 
   React.useEffect(() => {
-    if (!list.id) {
+    if (!list.id || list.id !== Number(match.params.id)) {
       getListRequest(match.params.id);
     }
 
-    if (!items.length) {
+    if (!items.length || items[0].listId !== Number(match.params.id)) {
       getItemsRequest(match.params.id);
     }
   }, [getItemsRequest, getListRequest, items, list, match.params.id]);
