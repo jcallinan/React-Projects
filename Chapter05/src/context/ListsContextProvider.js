@@ -58,7 +58,7 @@ async function fetchData(dataSource) {
 const ListsContextProvider = ({ children }) => {
   const [value, dispatch] = React.useReducer(reducer, initialValue);
 
-  const getListsRequest = async () => {
+  const getListsRequest = React.useCallback(async () => {
     const result = await fetchData(
       'https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists',
     );
@@ -68,9 +68,9 @@ const ListsContextProvider = ({ children }) => {
     } else {
       dispatch({ type: 'GET_LISTS_ERROR', payload: result.error });
     }
-  };
+  }, []);
 
-  const getListRequest = async id => {
+  const getListRequest = React.useCallback(async id => {
     const result = await fetchData(
       `https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists/${id}`,
     );
@@ -80,7 +80,7 @@ const ListsContextProvider = ({ children }) => {
     } else {
       dispatch({ type: 'GET_LIST_ERROR', payload: result.error });
     }
-  };
+  }, []);
 
   return (
     <ListsContext.Provider

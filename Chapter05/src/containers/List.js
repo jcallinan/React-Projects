@@ -18,20 +18,26 @@ const Alert = styled.span`
 `;
 
 const List = ({ match, history }) => {
+  const listId = Number(match.params.id);
   const { list, getListRequest } = React.useContext(ListsContext);
-  const { loading, error, items, getItemsRequest } = React.useContext(
+  const { loading, error, itemsByList, getItemsRequest } = React.useContext(
     ItemsContext,
+  );
+  const items = itemsByList[listId] || [];
+  const hasItemsForCurrentList = Object.prototype.hasOwnProperty.call(
+    itemsByList,
+    listId,
   );
 
   React.useEffect(() => {
-    if (!list.id) {
-      getListRequest(match.params.id);
+    if (!list.id || list.id !== listId) {
+      getListRequest(listId);
     }
 
-    if (!items.length) {
-      getItemsRequest(match.params.id);
+    if (!hasItemsForCurrentList) {
+      getItemsRequest(listId);
     }
-  }, [getItemsRequest, getListRequest, items, list, match.params.id]);
+  }, [getItemsRequest, getListRequest, hasItemsForCurrentList, list.id, listId]);
 
   return !loading && !error ? (
     <>
