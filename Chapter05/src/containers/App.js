@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Route, Switch } from 'react-router-dom';
 import GlobalContext from '../context/GlobalContext';
-import Header from '../components/Header/Header';
-import Lists from './Lists';
-import List from './List';
-import Form from './Form';
+
+const Header = lazy(() => import('../components/Header/Header'));
+const Lists = lazy(() => import('./Lists'));
+const List = lazy(() => import('./List'));
+const Form = lazy(() => import('./Form'));
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -23,18 +24,24 @@ const AppWrapper = styled.div`
   text-align: center;
 `;
 
+const LoadingMessage = styled.p`
+  margin: 1.5rem 0;
+`;
+
 const App = () => (
   <>
     <GlobalStyle />
     <AppWrapper>
-      <Header />
-      <GlobalContext>
-        <Switch>
-          <Route exact path='/' component={Lists} />
-          <Route path='/list/:id/new' component={Form} />
-          <Route path='/list/:id' component={List} />
-        </Switch>
-      </GlobalContext>
+      <Suspense fallback={<LoadingMessage>Loading...</LoadingMessage>}>
+        <Header />
+        <GlobalContext>
+          <Switch>
+            <Route exact path='/' component={Lists} />
+            <Route path='/list/:id/new' component={Form} />
+            <Route path='/list/:id' component={List} />
+          </Switch>
+        </GlobalContext>
+      </Suspense>
     </AppWrapper>
   </>
 );
