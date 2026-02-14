@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ListsContext } from '../context/ListsContextProvider';
 import { ItemsContext } from '../context/ItemsContextProvider';
 import SubHeader from '../components/Header/SubHeader';
 import FormItem from '../components/FormItem/FormItem';
@@ -18,10 +19,20 @@ const SubmitButton = styled(Button)`
 `;
 
 const Form = ({ match, history }) => {
+  const listId = Number(match.params.id);
+  const { list, getListRequest } = React.useContext(ListsContext);
   const { addItemRequest } = React.useContext(ItemsContext);
-  const [title, setTitle]= React.useState('');
-  const [quantity, setQuantity]= React.useState('');
-  const [price, setPrice]= React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [quantity, setQuantity] = React.useState('');
+  const [price, setPrice] = React.useState('');
+
+  React.useEffect(() => {
+    if (!list.id || list.id !== listId) {
+      getListRequest(listId);
+    }
+  }, [getListRequest, list.id, listId]);
+
+  const listTitle = list.id === listId ? list.title : 'Loading list...';
 
   const handleOnSubmit = e => {
     e.preventDefault();
@@ -30,7 +41,7 @@ const Form = ({ match, history }) => {
       quantity,
       price,
       id: Math.floor(Math.random() * 100),
-      listId: parseInt(match.params.id),
+      listId,
     });
     history.goBack();
   };
@@ -38,7 +49,10 @@ const Form = ({ match, history }) => {
   return (
     <>
       {history && (
-        <SubHeader goBack={() => history.goBack()} title='Add Item' />
+        <SubHeader
+          goBack={() => history.goBack()}
+          title={`Add Item to ${listTitle}`}
+        />
       )}
       <FormWrapper>
         <form onSubmit={handleOnSubmit}>
