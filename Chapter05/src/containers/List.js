@@ -18,10 +18,12 @@ const Alert = styled.span`
 `;
 
 const List = ({ match, history }) => {
+  const listId = Number(match.params.id);
   const { list, getListRequest } = React.useContext(ListsContext);
-  const { loading, error, items, getItemsRequest } = React.useContext(
+  const { loading, error, itemsByList, getItemsRequest } = React.useContext(
     ItemsContext,
   );
+  const items = itemsByList[listId] || [];
 
   React.useEffect(() => {
     if (!list.id || list.id !== Number(match.params.id)) {
@@ -31,7 +33,7 @@ const List = ({ match, history }) => {
     if (!items.length || items[0].listId !== Number(match.params.id)) {
       getItemsRequest(match.params.id);
     }
-  }, [getItemsRequest, getListRequest, items, list, match.params.id]);
+  }, [getItemsRequest, getListRequest, itemsByList, list, listId]);
 
   return !loading && !error ? (
     <>

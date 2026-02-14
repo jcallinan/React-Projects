@@ -3,32 +3,50 @@ import React from 'react';
 export const ItemsContext = React.createContext();
 
 const initialValue = {
-  items: [],
+  itemsByList: {},
   loading: true,
   error: '',
 };
 
 const reducer = (value, action) => {
   switch (action.type) {
-    case 'GET_ITEMS_SUCCESS':
+    case 'GET_ITEMS_START':
       return {
         ...value,
-        items: action.payload,
+        loading: true,
+        error: '',
+      };
+    case 'GET_ITEMS_SUCCESS': {
+      const { listId, items } = action.payload;
+
+      return {
+        ...value,
+        itemsByList: {
+          ...value.itemsByList,
+          [listId]: items,
+        },
         loading: false,
       };
+    }
     case 'GET_ITEMS_ERROR':
       return {
         ...value,
-        items: [],
         loading: false,
         error: action.payload,
       };
-    case 'ADD_ITEM_SUCCESS':
+    case 'ADD_ITEM_SUCCESS': {
+      const listId = action.payload.listId;
+      const existingItems = value.itemsByList[listId] || [];
+
       return {
         ...value,
-        items: [...value.items, action.payload],
+        itemsByList: {
+          ...value.itemsByList,
+          [listId]: [...existingItems, action.payload],
+        },
         loading: false,
       };
+    }
     case 'ADD_ITEM_ERROR':
       return {
         ...value,
@@ -73,12 +91,17 @@ const ItemsContextProvider = ({ children }) => {
   const [value, dispatch] = React.useReducer(reducer, initialValue);
 
   const getItemsRequest = async id => {
+    dispatch({ type: 'GET_ITEMS_START' });
+
     const result = await fetchData(
       `https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists/${id}/items`,
     );
 
-    if (result.data && result.data.length) {
-      dispatch({ type: 'GET_ITEMS_SUCCESS', payload: result.data });
+    if (Array.isArray(result.data)) {
+      dispatch({
+        type: 'GET_ITEMS_SUCCESS',
+        payload: { listId: Number(id), items: result.data },
+      });
     } else {
       dispatch({ type: 'GET_ITEMS_ERROR', payload: result.error });
     }
