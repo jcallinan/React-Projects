@@ -90,7 +90,7 @@ async function postData(dataSource, content) {
 const ItemsContextProvider = ({ children }) => {
   const [value, dispatch] = React.useReducer(reducer, initialValue);
 
-  const getItemsRequest = async id => {
+  const getItemsRequest = React.useCallback(async id => {
     dispatch({ type: 'GET_ITEMS_START' });
 
     const result = await fetchData(
@@ -105,9 +105,9 @@ const ItemsContextProvider = ({ children }) => {
     } else {
       dispatch({ type: 'GET_ITEMS_ERROR', payload: result.error });
     }
-  };
+  }, []);
 
-  const addItemRequest = async content => {
+  const addItemRequest = React.useCallback(async content => {
     const result = await postData(
       'https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists',
       content,
@@ -118,7 +118,7 @@ const ItemsContextProvider = ({ children }) => {
     } else {
       dispatch({ type: 'ADD_ITEM_ERROR' });
     }
-  };
+  }, []);
 
   return (
     <ItemsContext.Provider

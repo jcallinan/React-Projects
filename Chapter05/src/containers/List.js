@@ -24,16 +24,20 @@ const List = ({ match, history }) => {
     ItemsContext,
   );
   const items = itemsByList[listId] || [];
+  const hasItemsForCurrentList = Object.prototype.hasOwnProperty.call(
+    itemsByList,
+    listId,
+  );
 
   React.useEffect(() => {
-    if (!list.id || list.id !== Number(match.params.id)) {
-      getListRequest(match.params.id);
+    if (!list.id || list.id !== listId) {
+      getListRequest(listId);
     }
 
-    if (!items.length || items[0].listId !== Number(match.params.id)) {
-      getItemsRequest(match.params.id);
+    if (!hasItemsForCurrentList) {
+      getItemsRequest(listId);
     }
-  }, [getItemsRequest, getListRequest, itemsByList, list, listId]);
+  }, [getItemsRequest, getListRequest, hasItemsForCurrentList, list.id, listId]);
 
   return !loading && !error ? (
     <>
