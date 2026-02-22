@@ -10,8 +10,8 @@ import { ANIMATION_DURATION } from '../utils/constants';
 
 const init = initialState => ({
   slots: Array(9)
-    .fill(0)
-    .map(index => ({ id: index, filled: null })),
+    .fill(null)
+    .map((_, index) => ({ id: index, filled: null })),
   player1: [],
   player2: [],
 });
@@ -36,7 +36,7 @@ const reducer = (state, action) => {
 };
 
 const GameWrapper = styled(View)`
-  flex: 1
+  flex: 1;
   align-items: stretch;
   margin: 60px 0;
 `;

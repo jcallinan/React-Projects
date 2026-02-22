@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import { useAppContext } from '../context/AppContext';
 
 const LeaderBoardWrapper = styled(View)`
-  flex: 1
+  flex: 1;
   align-items: stretch;
   margin: 60px 0;
 `;
