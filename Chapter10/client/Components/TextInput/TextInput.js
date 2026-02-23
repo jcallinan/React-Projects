@@ -3,7 +3,7 @@ import { TextInput as TextInputComponent } from 'react-native';
 import styled from 'styled-components/native';
 
 const StyledTextInput = styled(TextInputComponent)`
-  width: ${({ width }) => `${width}%`}
+  width: ${({ width }) => `${width || 90}%`};
   padding: 18px;
   display: flex;
   align-items: center;
@@ -12,7 +12,7 @@ const StyledTextInput = styled(TextInputComponent)`
   border: 1px solid #ccc;
   background-color: #fff;
   font-size: 20px;
-  margin-bottom: ${({ marginBottom }) => `${marginBottom}px`}
+  margin-bottom: ${({ marginBottom }) => `${marginBottom ?? 10}px`};
 `;
 
 const TextInput = ({ onChangeText, ...props }) => (

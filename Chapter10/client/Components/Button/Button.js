@@ -3,8 +3,8 @@ import { TouchableOpacity, Text } from 'react-native';
 import styled from 'styled-components/native';
 
 const StyledButton = styled(TouchableOpacity)`
-  width: ${({ width }) => `${width}%`}
-  padding: ${({ padding }) => `${padding}px`}
+  width: ${({ width }) => `${width || 90}%`};
+  padding: ${({ padding }) => `${padding || 20}px`};
   display: flex;
   align-items: center;
   justify-content: space-around;

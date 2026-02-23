@@ -1,17 +1,13 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
-import { HttpLink } from 'apollo-link-http';
-import { split } from 'apollo-link';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
-import { ApolloProvider } from 'react-apollo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ApolloClient, InMemoryCache, HttpLink, split, ApolloProvider } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import AppContainer from './AppContainer';
 
-const API_URL = '';
-const SOCKET_URL = '';
+const API_URL = 'http://localhost:4000/graphql';
+const SOCKET_URL = 'ws://localhost:4000/graphql';
 
 const httpLink = new HttpLink({
   uri: API_URL,
@@ -44,14 +40,12 @@ const link = split(
     );
   },
   wsLink,
-  httpLink,
+  authLink.concat(httpLink),
 );
 
-const cache = new InMemoryCache();
-
 const client = new ApolloClient({
-  link: authLink.concat(link),
-  cache,
+  link,
+  cache: new InMemoryCache(),
 });
 
 const App = () => (

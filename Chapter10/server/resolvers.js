@@ -77,11 +77,11 @@ const resolvers = {
       const user = {
         userName: 'test',
         password:
-          '$2b$10$5dwsS5snIRlKu8ka5r7z0eoRyQVAsOtAZHkPJuSx.agOWjchXhSum',
+          '$2a$10$iZtlUMoETTVDPvsaDs.2meUuoJQ7mNB22FAMmtyp13nvHO0AMuG7.',
       };
 
       if (userName === user.userName) {
-        isValid = await Bcrypt.compareSync(password, user.password);
+        isValid = await Bcrypt.compare(password, user.password);
       }
 
       if (isValid) {

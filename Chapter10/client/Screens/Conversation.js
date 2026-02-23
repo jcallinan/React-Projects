@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Query } from 'react-apollo';
+import { useQuery } from '@apollo/client';
 import styled from 'styled-components/native';
 import { GET_CONVERSATION } from '../constants';
 import ConversationActions from '../Components/Conversation/ConversationActions';
@@ -19,27 +19,23 @@ const ConversationBodyText = styled(Text)`
   color: black;
 `;
 
-const Conversation = ({ navigation }) => {
-  const userName = navigation.getParam('userName', '');
+const Conversation = ({ route }) => {
+  const userName = route.params?.userName ?? '';
+  const { loading, data, subscribeToMore } = useQuery(GET_CONVERSATION, {
+    variables: { userName },
+  });
 
   return (
     <ConversationWrapper>
-      <Query query={GET_CONVERSATION} variables={{ userName }}>
-        {({ subscribeToMore, loading, data }) => {
-          if (loading) {
-            return <ConversationBodyText>Loading...</ConversationBodyText>;
-          }
-          const { messages } = data.conversation;
-
-          return (
-            <ConversationBody
-              messages={messages}
-              subscribeToMore={subscribeToMore}
-              userName={userName}
-            />
-          );
-        }}
-      </Query>
+      {loading ? (
+        <ConversationBodyText>Loading...</ConversationBodyText>
+      ) : (
+        <ConversationBody
+          messages={data.conversation.messages}
+          subscribeToMore={subscribeToMore}
+          userName={userName}
+        />
+      )}
       <ConversationActions userName={userName} />
     </ConversationWrapper>
   );

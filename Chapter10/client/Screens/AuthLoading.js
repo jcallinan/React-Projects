@@ -1,5 +1,6 @@
 import React from 'react';
-import { AsyncStorage, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled from 'styled-components/native';
 
 const AuthLoadingWrapper = styled(View)`

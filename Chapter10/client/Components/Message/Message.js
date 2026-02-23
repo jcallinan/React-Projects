@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import styled from 'styled-components/native';
 
 const MessageBalloon = styled(View)`
-  background-color: ${({ align }) => (align === 'left' ? 'grey' : 'blue')}
+  background-color: ${({ align }) => (align === 'left' ? 'grey' : 'blue')};
   padding: 4%;
   margin-bottom: 2%;
   border-radius: 15px;

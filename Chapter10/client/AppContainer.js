@@ -1,66 +1,56 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  createSwitchNavigator,
-  createAppContainer,
-} from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Conversations from './Screens/Conversations';
 import Conversation from './Screens/Conversation';
 import Settings from './Screens/Settings';
 import Login from './Screens/Login';
 import AuthLoading from './Screens/AuthLoading';
 
-const ConversationsStack = createStackNavigator({
-  Conversations: {
-    screen: Conversations,
-    navigationOptions: { title: 'All conversations' },
-  },
-  Conversation: {
-    screen: Conversation,
-    navigationOptions: { title: 'Conversation' },
-  },
-});
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+const RootStack = createStackNavigator();
 
-const TabNavigator = createBottomTabNavigator(
-  {
-    Conversations: ConversationsStack,
-    Settings,
-  },
-  {
-    initialRouteName: 'Conversations',
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ tintColor }) => {
-        const { routeName } = navigation.state;
+const ConversationsStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Conversations" component={Conversations} options={{ title: 'All conversations' }} />
+    <Stack.Screen name="Conversation" component={Conversation} options={{ title: 'Conversation' }} />
+  </Stack.Navigator>
+);
 
+const TabNavigator = () => (
+  <Tab.Navigator
+    initialRouteName="Conversations"
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ color }) => {
         let iconName;
-        if (routeName === 'Conversations') {
+        if (route.name === 'Conversations') {
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-chatbubbles`;
-        } else if (routeName === 'Settings') {
+        } else if (route.name === 'Settings') {
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-star`;
         }
-
-        return <Ionicons name={iconName} size={20} color={tintColor} />;
+        return <Ionicons name={iconName} size={20} color={color} />;
       },
-      tabBarOptions: {
-        activeTintColor: 'green',
-        inactiveTintColor: '#556',
-      },
-    }),
-  },
+      tabBarActiveTintColor: 'green',
+      tabBarInactiveTintColor: '#556',
+    })}
+  >
+    <Tab.Screen name="Conversations" component={ConversationsStack} options={{ headerShown: false }} />
+    <Tab.Screen name="Settings" component={Settings} />
+  </Tab.Navigator>
 );
 
-const SwitchNavigator = createSwitchNavigator(
-  {
-    Main: TabNavigator,
-    Login,
-    AuthLoading,
-  },
-  {
-    initialRouteName: 'AuthLoading',
-  },
+const AppContainer = () => (
+  <NavigationContainer>
+    <RootStack.Navigator initialRouteName="AuthLoading" screenOptions={{ headerShown: false }}>
+      <RootStack.Screen name="AuthLoading" component={AuthLoading} />
+      <RootStack.Screen name="Login" component={Login} />
+      <RootStack.Screen name="Main" component={TabNavigator} />
+    </RootStack.Navigator>
+  </NavigationContainer>
 );
 
-export default createAppContainer(SwitchNavigator);
+export default AppContainer;
