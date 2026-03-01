@@ -1,4 +1,4 @@
-# Chapter12 — Virtual Reality (React → react-three-fiber) Classroom Project
+# Chapter12 — Virtual Reality (React → react-three-fiber)
 
 This repo is a small interactive VR demo originally built with `react-360` and migrated to a modern React + three.js stack using `@react-three/fiber` (R3F). The goal is a hands-on project that demonstrates: loading 3D models, switching 360 backgrounds, rendering UI overlays, and wiring WebXR (entering VR) in a progressive-enhancement way.
 
