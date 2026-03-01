@@ -23,7 +23,7 @@ export default class Panel extends React.Component {
     return (
       <Animated.View style={[styles.panel, { opacity }]}>
         <View style={styles.welcomeBox}>
-          <Text style={styles.welcome}>Welcome to this world!</Text>
+          <Text style={styles.welcome}>Welcome to React VR World!</Text>
         </View>
         <VrButton
           onClick={() => this.setState({ open: false })}
